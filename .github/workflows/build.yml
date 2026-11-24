@@ -1,0 +1,57 @@
+# Builds the WOAH desktop app for Mac (.dmg) and Windows (.exe) and puts them on this repo's Releases page.
+# Runs by itself when the app files change, or by hand: Actions tab -> "Build WOAH desktop app" -> Run workflow.
+# To publish a new version, raise "version" in src-tauri/tauri.conf.json first (the app itself only shows the
+# live website, so this is only needed when the window, icon or link handling changes).
+name: Build WOAH desktop app
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['src-tauri/**', 'icon.png', 'package.json', '.github/workflows/build.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+          - platform: windows-latest
+            args: ''
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install the Tauri tools
+        run: npm install
+
+      - name: Make the app icons from icon.png
+        run: npx tauri icon ./icon.png -o src-tauri/icons
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'WOAH v__VERSION__'
+          releaseBody: 'WOAH for Mac (.dmg) and Windows (-setup.exe). The app shows the live WOAH dashboard, so it stays up to date by itself. First time opening: see the Get the app page on the dashboard.'
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
