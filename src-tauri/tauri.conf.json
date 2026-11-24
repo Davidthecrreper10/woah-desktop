@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "WOAH",
+  "version": "1.0.0",
+  "identifier": "org.woahfestival.dashboard",
+  "build": { "frontendDist": "../dist" },
+  "app": {
+    "windows": [],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["dmg", "nsis"],
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "publisher": "WOAH Festival",
+    "shortDescription": "WOAH Festival dashboard",
+    "longDescription": "The WOAH Festival team dashboard: emails, partners, POS, shop and more.",
+    "copyright": "WOAH Festival",
+    "category": "Productivity",
+    "macOS": { "minimumSystemVersion": "10.15" },
+    "windows": {
+      "webviewInstallMode": { "type": "downloadBootstrapper" },
+      "nsis": { "installMode": "currentUser" }
+    }
+  }
+}
