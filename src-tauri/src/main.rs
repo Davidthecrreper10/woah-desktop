@@ -1,4 +1,4 @@
-// No console window on Windows in the finished app.
+// no console window on Windows in release builds
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {

@@ -1,14 +1,10 @@
-// The WOAH desktop app: one window that shows the live WOAH dashboard website.
-// Nothing about the dashboard lives in here, so the app never needs updating when the website changes.
-// Links that leave the dashboard (Gmail, Google Sheets, Drive, email addresses) open in the computer's normal browser or mail app.
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_opener::OpenerExt;
 
 const SITE: &str = "https://davidthecrreper10.github.io/woah-dashboard/";
 const SITE_HOST: &str = "davidthecrreper10.github.io";
 
-// The website opens most links in a new tab. Inside the app there are no tabs, so a link click or window.open()
-// becomes a normal navigation, which on_navigation below sends to the browser when it leaves the dashboard.
+// no tabs in the app: new-tab links and window.open become navigations (see on_navigation)
 const INIT: &str = r#"
 (function () {
   function go(u) { try { var url = new URL(u, location.href); location.href = url.href; } catch (e) {} return null; }

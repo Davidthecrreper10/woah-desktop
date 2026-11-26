@@ -1,7 +1,4 @@
-# Builds the WOAH desktop app for Mac (.dmg) and Windows (.exe) and puts them on this repo's Releases page.
-# Runs by itself when the app files change, or by hand: Actions tab -> "Build WOAH desktop app" -> Run workflow.
-# To publish a new version, raise "version" in src-tauri/tauri.conf.json first (the app itself only shows the
-# live website, so this is only needed when the window, icon or link handling changes).
+# bump "version" in src-tauri/tauri.conf.json before a new release
 name: Build WOAH desktop app
 
 on:
